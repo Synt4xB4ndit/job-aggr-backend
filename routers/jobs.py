@@ -8,11 +8,18 @@ router = APIRouter()
 @router.get("/jobs")
 def search_jobs(
     keyword: str,
+    location: str = "",
     remote: bool | None = None,
-    source: str | None = None
+    source: str | None = None,
 ):
 
-    jobs = aggregate_jobs(keyword)
+    print(f"Keyword: {keyword}")
+    print(f"Location: {location}")
+
+    jobs = aggregate_jobs(
+        keyword=keyword,
+        location=location
+    )
 
     if remote is not None:
         jobs = [

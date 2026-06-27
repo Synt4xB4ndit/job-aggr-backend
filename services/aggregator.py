@@ -48,13 +48,50 @@ def filter_relevant_jobs(
     return filtered_jobs
 
 
-def aggregate_jobs(keyword: str):
+def filter_by_location(
+    jobs,
+    location
+):
+
+    if not location.strip():
+        return jobs
+
+    search = (
+        location.lower()
+        .replace(",", "")
+        .replace("massachusetts", "ma")
+        .strip()
+    )
+
+    filtered = []
+
+    for job in jobs:
+
+        job_location = (
+            job.location.lower()
+            .replace(",", "")
+            .replace("massachusetts", "ma")
+        )
+
+        if search in job_location:
+            filtered.append(job)
+
+    return filtered
+
+
+def aggregate_jobs(
+    keyword: str,
+    location: str = ""
+):
 
     jobs = []
 
     try:
         jobs.extend(
-            search_usajobs(keyword)
+            search_usajobs(
+                keyword,
+                location
+            )
         )
     except Exception as e:
         print(
@@ -63,7 +100,10 @@ def aggregate_jobs(keyword: str):
 
     try:
         jobs.extend(
-            search_themuse(keyword)
+            search_themuse(
+                keyword,
+                location
+            )
         )
     except Exception as e:
         print(
@@ -72,7 +112,10 @@ def aggregate_jobs(keyword: str):
 
     try:
         jobs.extend(
-            search_jooble(keyword)
+            search_jooble(
+                keyword,
+                location
+            )
         )
     except Exception as e:
         print(
@@ -81,7 +124,10 @@ def aggregate_jobs(keyword: str):
 
     try:
         jobs.extend(
-            search_adzuna(keyword)
+            search_adzuna(
+                keyword,
+                location
+            )
         )
     except Exception as e:
         print(
@@ -91,10 +137,6 @@ def aggregate_jobs(keyword: str):
     jobs = filter_relevant_jobs(
         jobs,
         keyword
-    
     )
-
-
-
 
     return jobs

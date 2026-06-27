@@ -8,7 +8,10 @@ from config import (
 from models.job import Job
 
 
-def search_adzuna(keyword: str):
+def search_adzuna(
+    keyword: str,
+    location: str = ""
+):
 
     if not ADZUNA_APP_ID:
         return []
@@ -28,6 +31,9 @@ def search_adzuna(keyword: str):
         "what": keyword
     }
 
+    if location.strip():
+        params["where"] = location
+
     response = requests.get(
         url,
         params=params,
@@ -37,6 +43,15 @@ def search_adzuna(keyword: str):
     response.raise_for_status()
 
     data = response.json()
+    print(params)
+
+    print("\n===== ADZUNA LOCATIONS =====")
+
+    for item in data.get("results", []):
+        if item.get("location"):
+            print(item["location"].get("display_name"))
+
+    print("==========================\n")
 
     jobs = []
 
@@ -53,10 +68,10 @@ def search_adzuna(keyword: str):
                 "Unknown"
             )
 
-        location = "Unknown"
+        location_name = "Unknown"
 
         if item.get("location"):
-            location = item["location"].get(
+            location_name = item["location"].get(
                 "display_name",
                 "Unknown"
             )
@@ -85,7 +100,7 @@ def search_adzuna(keyword: str):
                     "Unknown"
                 ),
                 company=company,
-                location=location,
+                location=location_name,
                 source="Adzuna",
                 apply_url=item.get(
                     "redirect_url",
