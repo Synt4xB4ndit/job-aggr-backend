@@ -21,7 +21,10 @@ SEARCH_EXPANSIONS = {
 }
 
 
-def search_jooble(keyword: str):
+def search_jooble(
+    keyword: str,
+    location: str = ""
+):
 
     if not JOOBLE_API_KEY:
         return []
@@ -35,6 +38,9 @@ def search_jooble(keyword: str):
         "keywords": keyword,
         "page": 1
     }
+
+    if location.strip():
+        payload["location"] = location
 
     response = requests.post(
         url,

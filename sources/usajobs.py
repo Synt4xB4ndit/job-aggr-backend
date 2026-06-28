@@ -8,12 +8,18 @@ from config import (
 from models.job import Job
 
 
-def search_usajobs(keyword: str):
+def search_usajobs(
+    keyword: str,
+    location: str = ""
+):
 
     url = (
         "https://data.usajobs.gov/api/search"
         f"?Keyword={keyword}"
     )
+
+    if location.strip():
+        url += f"&LocationName={location}"
 
     headers = {
         "Host": "data.usajobs.gov",

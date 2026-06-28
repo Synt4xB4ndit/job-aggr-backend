@@ -26,7 +26,10 @@ SEARCH_EXPANSIONS = {
 }
 
 
-def search_themuse(keyword: str):
+def search_themuse(
+    keyword: str,
+    location: str = ""
+    ):
 
     url = "https://www.themuse.com/api/public/jobs"
 
@@ -41,9 +44,14 @@ def search_themuse(keyword: str):
 
     for page in range(1, 6):
 
+        params = { 
+            "page": page
+
+        }
+
         response = requests.get(
             url,
-            params={"page": page},
+            params=params,
             timeout=20
         )
 
