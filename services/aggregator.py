@@ -20,6 +20,36 @@ SEARCH_EXPANSIONS = {
     ]
 }
 
+LOCATION_ALIASES = {
+    "westport": [
+        "westport",
+        "fall river",
+        "dartmouth",
+        "new bedford"
+    ],
+
+    "tiverton": [
+        "tiverton",
+        "fall river",
+        "somerset"
+    ],
+
+    "fall river": [
+        "fall river",
+        "westport",
+        "somerset",
+        "tiverton"
+    ],
+
+    "boston": [
+        "boston",
+        "south boston",
+        "cambridge",
+        "quincy",
+        "brookline"
+    ]
+}
+
 
 def filter_relevant_jobs(
     jobs,
@@ -60,7 +90,13 @@ def filter_by_location(
         location.lower()
         .replace(",", "")
         .replace("massachusetts", "ma")
+        .replace("rhode island", "ri")
         .strip()
+    )
+
+    search_locations = LOCATION_ALIASES.get(
+        search,
+        [search]
     )
 
     filtered = []
@@ -71,9 +107,13 @@ def filter_by_location(
             job.location.lower()
             .replace(",", "")
             .replace("massachusetts", "ma")
+            .replace("rhode island", "ri")
         )
 
-        if search in job_location:
+        if any(
+            city in job_location
+            for city in search_locations
+        ):
             filtered.append(job)
 
     return filtered
